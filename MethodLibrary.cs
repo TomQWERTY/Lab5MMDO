@@ -30,7 +30,7 @@ namespace Lab5MMDO
             return x0;
         }
 
-        public static double[] GradF(double[] x, Function F)
+        private static double[] GradF(double[] x, Function F)
         {
             int n = x.Length;
             double[] grad = new double[n];
@@ -78,14 +78,14 @@ namespace Lab5MMDO
 
         public static double[] Newton(int n, Function F, double[] x0, double e)
         {
-            double[] g = GradF(x0);
+            double[] g = GradF(x0, F);
             if (Norm(g) > e)
             {
                 do
                 {
                     double[] x = new double[n];
                     Array.Copy(x0, x, n);
-                    double[,] g2 = GessF(x0);
+                    double[,] g2 = GessF(x0, F);
                     double[,] g2_1 = Inverse(g2);
                     double[] w = new double[n];
                     for (int i = 0; i < n; i++)
@@ -97,11 +97,25 @@ namespace Lab5MMDO
                         }
                         x0[i] = x[i] - w[i];
                     }
-                    g = GradF(x0);
+                    g = GradF(x0, F);
                 }
                 while (Norm(g) >= e);
             }
             return x0;
+        }
+
+        private static double[,] GessF(double[] x, Function F)
+        {
+            int n = x.Length;
+            double[,] gess = new double[n, n];
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    gess[i, j] = FDiff(j, FDiff(i, F))(x);
+                }
+            }
+            return gess;
         }
 
         private static Function FDiff(int varInd, Function F_)
@@ -120,11 +134,11 @@ namespace Lab5MMDO
             return FD;
         }
 
-        public static double[,] Inverse(double[,] matrix)
+        private static double[,] Inverse(double[,] matrix)
         {
             int n = matrix.GetLength(0);
             double[,] a1 = new double[n, n];
-            Array.Copy(matrix, a1, n);
+            Array.Copy(matrix, a1, n * n);
             double[,] b1 = new double[n, n], a2 = new double[n, n], b2 = new double[n, n];
             for (int k = 0; k < n; k++)
             {
