@@ -1,3 +1,9 @@
 E:\Univer\Numerical_methods\Lab5MMDO\bin\Debug\Lab5MMDO.exe.config
 E:\Univer\Math_m\Lab5MMDO\bin\Debug\Lab5MMDO.exe.config
 E:\Univer\Math_m\Lab5MMDO\obj\Debug\Lab5MMDO.csprojResolveAssemblyReference.cache
+D:\University\Математичні-методи дослідження операцій\Лабораторна робота №5\Git_Lab_5\Lab5MMDO\bin\Debug\Lab5MMDO.exe.config
+D:\University\Математичні-методи дослідження операцій\Лабораторна робота №5\Git_Lab_5\Lab5MMDO\obj\Debug\Lab5MMDO.csprojResolveAssemblyReference.cache
+D:\University\Математичні-методи дослідження операцій\Лабораторна робота №5\Git_Lab_5\Lab5MMDO\bin\Debug\Lab5MMDO.exe
+D:\University\Математичні-методи дослідження операцій\Лабораторна робота №5\Git_Lab_5\Lab5MMDO\bin\Debug\Lab5MMDO.pdb
+D:\University\Математичні-методи дослідження операцій\Лабораторна робота №5\Git_Lab_5\Lab5MMDO\obj\Debug\Lab5MMDO.exe
+D:\University\Математичні-методи дослідження операцій\Лабораторна робота №5\Git_Lab_5\Lab5MMDO\obj\Debug\Lab5MMDO.pdb
