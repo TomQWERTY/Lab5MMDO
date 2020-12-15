@@ -7,3 +7,7 @@ D:\University\Математичні-методи дослідження опе�
 D:\University\Математичні-методи дослідження операцій\Лабораторна робота №5\Git_Lab_5\Lab5MMDO\bin\Debug\Lab5MMDO.pdb
 D:\University\Математичні-методи дослідження операцій\Лабораторна робота №5\Git_Lab_5\Lab5MMDO\obj\Debug\Lab5MMDO.exe
 D:\University\Математичні-методи дослідження операцій\Лабораторна робота №5\Git_Lab_5\Lab5MMDO\obj\Debug\Lab5MMDO.pdb
+E:\Univer\Math_m\Lab5MMDO\obj\Debug\Lab5MMDO.exe
+E:\Univer\Math_m\Lab5MMDO\obj\Debug\Lab5MMDO.pdb
+E:\Univer\Math_m\Lab5MMDO\bin\Debug\Lab5MMDO.exe
+E:\Univer\Math_m\Lab5MMDO\bin\Debug\Lab5MMDO.pdb
