@@ -24,6 +24,7 @@ namespace Lab5MMDO
                         x0[i] = x[i] - h * g[i];
                     }
                     g = GradF(x0, F);
+                    Console.WriteLine("\t" + x0[0] + " " + x0[1]);
                 }
                 while (!(Norm(x) - Norm(x0) < e || Norm(g) < e));
 
@@ -187,6 +188,7 @@ namespace Lab5MMDO
             double[] x_int = new double[n];
             double[] x_ext = new double[n];
             Array.Copy(x0, x_int, n);
+            double[] i_e = new double[n];
             do
             {
                 Array.Copy(x_int, x_ext, n);
@@ -214,8 +216,12 @@ namespace Lab5MMDO
                     }
                     while (fx1 >= fx && h[i] >= e / 2);
                 }
+                for (int i = 0; i < n; i++)
+                {
+                    i_e[i] = x_int[i] - x_ext[i];
+                }
             }
-            while (Norm(x_int) - Norm(x_ext) >= e);
+            while (Norm(i_e) >= e);
             return x_int;
         }
 

@@ -17,7 +17,7 @@ namespace Lab5MMDO
             double e = Math.Pow(10, -4);
             double[] ans = MethodLibrary.ReiskiMehod(n, f1, new double[2] { -2, 1 }, e * 100, Math.Pow(10, -4));
             Console.WriteLine(ans[0] + " " + ans[1]);
-            ans = MethodLibrary.PokoordReiski(n, new double[2] { -2, 1 }, e * 100, e, e, f1);
+            ans = MethodLibrary.PokoordReiski(n, new double[2] { -2, 1 }, e * 100, e * 1000, e, f1);
             Console.WriteLine(ans[0] + " " + ans[1]);
             ans = MethodLibrary.Newton(n, f1, new double[2] { -2, 1 }, Math.Pow(10, -4));
             Console.WriteLine(ans[0] + " " + ans[1]);
