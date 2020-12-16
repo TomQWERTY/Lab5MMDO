@@ -28,14 +28,12 @@ namespace Lab5MMDO
                         x0[i] = x[i] - h * g[i];
                     }
                     g = GradF(x0, F);
-                    //Console.WriteLine("\t" + x0[0] + " " + x0[1]);
                     for (int i = 0; i < n; i++)
                     {
                         x_x0[i] = x[i] - x0[i];
                     }
                 }
                 while (!(Norm(x_x0) < e || Norm(g) < e));
-
             }
             return x0;
         }
