@@ -19,7 +19,7 @@ namespace Lab5MMDO
                     Array.Copy(x0, x, x0.Length);
                     double[] xb = new double[n];
                     Array.Copy(x, xb, n);
-                    double h = FH(n, h0, x, g, e, F);
+                    double h = FindH(n, h0, x, g, e, F);
                     for (int i = 0; i < n; i++)
                     {
                         x0[i] = x[i] - h * g[i];
@@ -52,7 +52,7 @@ namespace Lab5MMDO
             }
             return Math.Sqrt(kvSum);
         }
-        private static double FH(int n, double h0, double[] x0, double[] g, double e, Function F)
+        private static double FindH(int n, double h0, double[] x0, double[] g, double e, Function F)
         {
             double q = e / 3;
             double[] x1 = new double[n];
@@ -69,7 +69,7 @@ namespace Lab5MMDO
                 }
                 f2 = F(x2);
             }
-            while (f1 <= f2 && h0 < e);
+            while (f1 <= f2 && h0 >= e);
             if (h0 > e)
             {
                 do
@@ -108,7 +108,7 @@ namespace Lab5MMDO
                 return (ha + hb) / 2;
             }
             else
-                return h;
+                return h0;
         }
 
         
@@ -169,7 +169,7 @@ namespace Lab5MMDO
                         }
                         x0[i] = x[i] - w[i];
                     }
-                    double h = FH(n, h0, x0, g, e, F);
+                    double h = FindH(n, h0, x0, g, e, F);
                     
                     for (int i = 0; i < n; i++)
                     {
@@ -204,7 +204,7 @@ namespace Lab5MMDO
                 double[] inp = new double[n];
                 Array.Copy(x, inp, n);
                 double f = F_(inp);
-                double dX = 0.0001;
+                double dX = 0.0000001;
                 inp[varInd] += dX;
                 double f2 = F_(inp);
                 return (f2 - f) / dX;
