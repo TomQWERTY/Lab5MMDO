@@ -8,23 +8,26 @@ namespace Lab5MMDO
 {
     class MethodLibrary
     {
-        public static double[] ReiskiMehod(int n, Function F, double[] x0, double e)
+        public static double[] ReiskiMehod(int n, Function F, double[] x0, double h0, double e)
         {
-            double[] x = new double[2];
+            double[] x = new double[n];
             double[] g = GradF(x0, F);
-            if (Norm(g) < e)
+            double h = h0;
+            if (Norm(g) > e)
             {
                 do
                 {
                     Array.Copy(x0, x, x0.Length);
-                    double h = FindH(e, x0, F);
+                    double[] xb = new double[n];
+                    Array.Copy(x, xb, n);
+                    h = FH(n, h - e,h + e, xb, g, e, F);
                     for (int i = 0; i < n; i++)
                     {
                         x0[i] = x[i] - h * g[i];
                     }
                     g = GradF(x0, F);
                 }
-                while (Norm(x) - Norm(x0) >= e || Norm(g) >= e);
+                while (Norm(x) - Norm(x0) >= e && Norm(g) >= e);
 
             }
             return x0;
@@ -50,32 +53,73 @@ namespace Lab5MMDO
             }
             return Math.Sqrt(kvSum);
         }
-
-        private static double FindH(double e, double[] start, Function F)
+        private static double FH(int n, double ha_, double hb_, double[] x, double[] g, double e, Function F)
         {
-            double h = e * 10;
-            double[] x0 = new double[2] { start[0] + h, start[1] + h };
-            double[] x1 = new double[2];
-            double[] x2 = new double[2];
+            double q = e / 3;
+            double[] x0 = new double[n];
+            Array.Copy(x, x0, n);
+            double[] x1 = new double[n];
+            double[] x2 = new double[n];
+            double ha = ha_;
+            double hb = hb_;
+            do
+            {
+                double h1 = (ha + hb - q) / 2;
+                double h2 = (ha + hb + q) / 2;
+                for (int i = 0; i < n; i++)
+			    {
+                    x1[i] = x0[i] - h1 * g[i];
+                    x2[i] = x0[i] - h2 * g[i];
+			    }
+                if (F(x1) <= F(x2))
+                {
+                    hb = h2;                    
+                }
+                else
+                {
+                    ha = h1;
+                }
+            }
+            while(hb - ha >= e);
+            return (ha + hb) / 2;
+        }
+
+        private static double FindH(int n,double h0, double fx, double[] x, double[] g, double e, Function F)
+        {
+            double h = h0;
+            double[] x0 = new double[n];
+            Array.Copy(x, x0, n);
+            double[] x1 = new double[n];
+            double[] x2 = new double[n];
             double f1 = F(x0);
             double f2;
             do
             {
                 h /= 2;
-                x2 = new double[2] { start[0] + h, start[1] + h };
+                AddH(x0, ref x2, h, g);
                 f2 = F(x2);
                 if (f1 <= f2)
                 {
                     h = -h;
-                    x2 = new double[2] { start[0] + h, start[1] + h };
+                    AddH(x0, ref x2, h, g);
                     f2 = F(x2);
                 }
+
             }
             while (f1 <= f2 && Math.Abs(h) >= e);
-
+           
             return h;
+            
         }
 
+        private static double[] AddH(double[] x0, ref double[] x2, double h, double[] g)
+        {
+            for (int i = 0; i < x0.Length; i++)
+            {
+                x2[i] = x0[i] + h;
+            }
+            return x2;
+        }
         public static double[] Newton(int n, Function F, double[] x0, double e)
         {
             double[] g = GradF(x0, F);
@@ -168,6 +212,47 @@ namespace Lab5MMDO
                 b2 = temp;
             }
             return a2;
+        }
+        public static double[] PokoordReiski(int n, double[] x0, double h0, double l, double e, Function F)
+        {
+            double[] h = new double[n];
+            for (int i = 0; i < n; i++)
+            {
+                h[i] = h0;
+            }
+            double[] x_int = new double[n];
+            double[] x_ent = new double[n];
+            Array.Copy(x0, x_int, n);
+            do
+            {
+                Array.Copy(x_int, x_ent, n);
+                for (int i = 0; i < n; i++)
+                {
+                    double[] x = new double[n];
+                    Array.Copy(x_int, x, n);
+                    double fx = F(x);
+                    double[] y1 = new double[n];
+                    Array.Copy(x, y1, n);
+                    y1[i] += 3 * e;
+                    double[] y2 = new double[n];
+                    Array.Copy(x, y2, n);
+                    y2[i] -= 3 * e;
+                    double f1 = F(y1);
+                    double f2 = F(y2);
+                    double z = Math.Sign(f2 - f1);
+                    double fx1 = 0;
+                    do
+                    {
+                        x_int[i] = x[i] + h[i] * z;
+                        fx1 = F(x_int);
+                        if (fx1 >= fx)
+                            h[i] = l * h[i];
+                    }
+                    while (fx1 >= fx && h[i] >= e / 2);
+                }
+            }
+            while (Norm(x_int) - Norm(x_ent) >= e);
+            return x_int;
         }
     }
 }
