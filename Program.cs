@@ -21,6 +21,8 @@ namespace Lab5MMDO
             Console.WriteLine(ans[0] + " " + ans[1]);
             ans = MethodLibrary.Newton(n, f1, new double[2] { -2, 1 }, Math.Pow(10, -4));
             Console.WriteLine(ans[0] + " " + ans[1]);
+            ans = MethodLibrary.Newton2(n, f1, new double[2] { -2, 1 }, Math.Pow(10, -4), e * 100);
+            Console.WriteLine(ans[0] + " " + ans[1]);
             Console.ReadKey();
         }
     }
