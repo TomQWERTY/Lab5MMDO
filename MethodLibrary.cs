@@ -148,6 +148,39 @@ namespace Lab5MMDO
             return x0;
         }
 
+        /*public static double[] Newton2(int n, Function F, double[] x0, double e, double h0)
+        {
+            double[] g = GradF(x0, F);
+            if (Norm(g) > e)
+            {
+                do
+                {
+                    double[] x = new double[n];
+                    Array.Copy(x0, x, n);
+                    double[,] g2 = GessF(x0, F);
+                    double[,] g2_1 = Inverse(g2);
+                    double[] w = new double[n];
+                    for (int i = 0; i < n; i++)
+                    {
+                        w[i] = 0;
+                        for (int j = 0; j < n; j++)
+                        {
+                            w[i] += g2_1[i, j] * g[j];
+                        }
+                        x0[i] = x[i] - w[i];
+                    }
+                    double h = FindH(n, F, x, w, h0, e);
+                    for (int i = 0; i < n; i++)
+                    {
+                        x0[i] = x[i] - h * w[i];
+                    }
+                    g = GradF(x0, F);
+                }
+                while (Norm(g) >= e);
+            }
+            return x0;
+        }*/
+
         private static double[,] GessF(double[] x, Function F)
         {
             int n = x.Length;
