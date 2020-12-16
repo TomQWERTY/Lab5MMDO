@@ -17,14 +17,8 @@ namespace Lab5MMDO
             {
                 do
                 {
-
                     Array.Copy(x0, x, n);
-                    double h = Find_h_new(n, F, x0, g, h0, e);
-
-//                    Array.Copy(x0, x, x0.Length);
-//                    double[] xb = new double[n];
-//                    Array.Copy(x, xb, n);
-//                    double h = FindH(n, h0, x, g, e, F);
+                    double h = FindH(n, F, x0, g, h0, e);
                     for (int i = 0; i < n; i++)
                     {
                         x0[i] = x[i] - h * g[i];
@@ -57,77 +51,7 @@ namespace Lab5MMDO
             }
             return Math.Sqrt(kvSum);
         }
-        private static double FindH(int n, double h0, double[] x0, double[] g, double e, Function F)
-        {
-            double[] x1 = new double[n];
-            double[] x2 = new double[n];
-            double f1 = F(x0);
-            double f2;
-            double h = 0;
-            do
-            {
-                h0 /= 2;
-                for (int i = 0; i < n; i++)
-                {
-                    x2[i] = x0[i] - h0 * g[i];
-                }
-                f2 = F(x2);
-            }
-            while (f1 <= f2 && h0 > e);
-            //while (f1 <= f2 && h0 >= e);
-            if (h0 > e)
-            {
-                do
-                {
-                    Array.Copy(x2, x1, n);
-                    f1 = f2;
-                    h += h0;
-                    for (int i = 0; i < n; i++)
-                    {
-                        x2[i] = x1[i] - h * g[i];
-                    }
-                    f2 = F(x2);
-                }
-                while (f1 >= f2);
-                double ha = h - 2 * h0;
-                double hb = h;
-                double q = e / 3;
-                do
-                {
-                    double h1 = (ha + hb - q) / 2;
-                    double h2 = (ha + hb + q) / 2;
-                    for (int i = 0; i < n; i++)
-                    {
-                        x1[i] = x0[i] - h1 * g[i];
-                        x2[i] = x0[i] - h2 * g[i];
-                    }
-                    f1 = F(x1);
-                    f2 = F(x2);
-                    if (f1 <= f2)
-                    {
-                        hb = h2;
-                    }
-                    else
-                    {
-                        ha = h1;
-                    }
-                }
-                while (hb - ha >= e);
-                return (ha + hb) / 2;
-            }
-            else
-                return h0;
-        }
-
         
-        private static double[] AddH(double[] x0, ref double[] x2, double h, double[] g)
-        {
-            for (int i = 0; i < x0.Length; i++)
-            {
-                x2[i] = x0[i] + h;
-            }
-            return x2;
-        }
         public static double[] Newton(int n, Function F, double[] x0, double e)
         {
             double[] g = GradF(x0, F);
@@ -175,11 +99,8 @@ namespace Lab5MMDO
                         {
                             w[i] += g2_1[i, j] * g[j];
                         }
-                        x0[i] = x[i] - w[i];
                     }
-                    double h = Find_h_new(n,F,x0,g,h0,e);
-                    //double h = FindH(n, h0, x0, g, e, F);
-                    
+                    double h = FindH(n, F, x0, w, h0, e);
                     for (int i = 0; i < n; i++)
                     {
                         x0[i] = x[i] - h * w[i];
@@ -298,7 +219,7 @@ namespace Lab5MMDO
             return x_int;
         }
 
-        private static double Find_h_new(int n, Function F, double[] x0_, double[] g_, double h0, double e)
+        private static double FindH(int n, Function F, double[] x0_, double[] g_, double h0, double e)
         {
             double[] x0 = new double[n];
             Array.Copy(x0_, x0, n);
