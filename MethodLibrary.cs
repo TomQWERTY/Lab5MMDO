@@ -13,6 +13,7 @@ namespace Lab5MMDO
             
             double[] x = new double[n];
             double[] g = GradF(x0, F);
+            double[] x_x0 = new double[n];
             if (Norm(g) > e)
             {
                 do
@@ -25,8 +26,12 @@ namespace Lab5MMDO
                     }
                     g = GradF(x0, F);
                     Console.WriteLine("\t" + x0[0] + " " + x0[1]);
+                    for (int i = 0; i < n; i++)
+                    {
+                        x_x0[i] = x[i] - x0[i];
+                    }
                 }
-                while (!(Norm(x) - Norm(x0) < e || Norm(g) < e));
+                while (!(Norm(x_x0) < e || Norm(g) < e));
 
             }
             return x0;
@@ -225,41 +230,37 @@ namespace Lab5MMDO
             return x_int;
         }
 
-        private static double FindH(int n, Function F, double[] x0_, double[] g_, double h0, double e)
+        private static double FindH(int n, Function F, double[] x0, double[] g, double h0, double e)
         {
-            double[] x0 = new double[n];
-            Array.Copy(x0_, x0, n);
-            double[] g = new double[n];
-            Array.Copy(g_ ,g ,n);
             double h = 0;
             double f1 = F(x0);
-            double f2 = 0;
-            double[] x1 = new double[n];
             double[] x2 = new double[n];
+            double f2 = 0;
             do
             {
-                h0 = h0 / 2;
+                h0 /= 2;
                 for (int i = 0; i < n; i++)
                 {
                     x2[i] = x0[i] - h0 * g[i];
                 }
                 f2 = F(x2);
             }
-            while (!(f1 > f2 || h0 < e));
+            while (f1 <= f2 && h0 >= e);
             if (h0 > e)
             {
+                double[] x1 = new double[n];
                 do
                 {
                     Array.Copy(x2, x1, n);
                     f1 = f2;
-                    h = h + h0;
+                    h += h0;
                     for (int i = 0; i < n; i++)
                     {
                         x2[i] = x1[i] - h * g[i];
                     }
                     f2 = F(x2);
                 }
-                while (!(f1 < f2));
+                while (f1 >= f2);
                 double ha = h - 2 * h0;
                 double hb = h;
                 double q = e / 3;
@@ -268,25 +269,115 @@ namespace Lab5MMDO
                     double h1 = (ha + hb - q) / 2;
                     double h2 = (ha + hb + q) / 2;
                     for (int i = 0; i < n; i++)
-			        {
+                    {
                         x1[i] = x0[i] - h1 * g[i];
                         x2[i] = x0[i] - h2 * g[i];
-			        }
+                    }
                     f1 = F(x1);
                     f2 = F(x2);
                     if (f1 <= f2)
                     {
                         hb = h2;
                     }
-                    else 
+                    else
                     {
                         ha = h1;
                     }
                 }
-                while(!(hb - ha < e));
+                while (hb - ha >= e);
                 h = (ha + hb) / 2;
             }
             return h;
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //private static double FindH(int n, Function F, double[] x0_, double[] g_, double h0, double e)
+        //{
+        //    double[] x0 = new double[n];
+        //    Array.Copy(x0_, x0, n);
+        //    double[] g = new double[n];
+        //    Array.Copy(g_ ,g ,n);
+        //    double h = 0;
+        //    double f1 = F(x0);
+        //    double f2 = 0;
+        //    double[] x1 = new double[n];
+        //    double[] x2 = new double[n];
+        //    do
+        //    {
+        //        h0 = h0 / 2;
+        //        for (int i = 0; i < n; i++)
+        //        {
+        //            x2[i] = x0[i] - h0 * g[i];
+        //        }
+        //        f2 = F(x2);
+        //    }
+        //    while (!(f1 > f2 || h0 < e));
+        //    if (h0 > e)
+        //    {
+        //        do
+        //        {
+        //            Array.Copy(x2, x1, n);
+        //            f1 = f2;
+        //            h = h + h0;
+        //            for (int i = 0; i < n; i++)
+        //            {
+        //                x2[i] = x1[i] - h * g[i];
+        //            }
+        //            f2 = F(x2);
+        //        }
+        //        while (!(f1 < f2));
+        //        double ha = h - 2 * h0;
+        //        double hb = h;
+        //        double q = e / 3;
+        //        do
+        //        {
+        //            double h1 = (ha + hb - q) / 2;
+        //            double h2 = (ha + hb + q) / 2;
+        //            for (int i = 0; i < n; i++)
+        //            {
+        //                x1[i] = x0[i] - h1 * g[i];
+        //                x2[i] = x0[i] - h2 * g[i];
+        //            }
+        //            f1 = F(x1);
+        //            f2 = F(x2);
+        //            if (f1 <= f2)
+        //            {
+        //                hb = h2;
+        //            }
+        //            else 
+        //            {
+        //                ha = h1;
+        //            }
+        //        }
+        //        while(!(hb - ha < e));
+        //        h = (ha + hb) / 2;
+        //    }
+        //    return h;
+        //}
     }
 }
