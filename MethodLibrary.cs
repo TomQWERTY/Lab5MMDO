@@ -10,23 +10,22 @@ namespace Lab5MMDO
     {
         public static double[] ReiskiMehod(int n, Function F, double[] x0, double h0, double e)
         {
+            
             double[] x = new double[n];
             double[] g = GradF(x0, F);
             if (Norm(g) > e)
             {
                 do
                 {
-                    Array.Copy(x0, x, x0.Length);
-                    double[] xb = new double[n];
-                    Array.Copy(x, xb, n);
-                    double h = FH(n, h0, x, g, e, F);
+                    Array.Copy(x0, x, n);
+                    double h = Find_h_new(n, F, x0, g, h0, e);
                     for (int i = 0; i < n; i++)
                     {
                         x0[i] = x[i] - h * g[i];
                     }
                     g = GradF(x0, F);
                 }
-                while (Norm(x) - Norm(x0) >= e && Norm(g) >= e);
+                while (!(Norm(x) - Norm(x0) < e || Norm(g) < e));
 
             }
             return x0;
@@ -54,7 +53,6 @@ namespace Lab5MMDO
         }
         private static double FH(int n, double h0, double[] x0, double[] g, double e, Function F)
         {
-            double q = e / 3;
             double[] x1 = new double[n];
             double[] x2 = new double[n];
             double f1 = F(x0);
@@ -69,7 +67,7 @@ namespace Lab5MMDO
                 }
                 f2 = F(x2);
             }
-            while (f1 <= f2 && h0 < e);
+            while (f1 <= f2 && h0 > e);
             if (h0 > e)
             {
                 do
@@ -86,6 +84,7 @@ namespace Lab5MMDO
                 while (f1 >= f2);
                 double ha = h - 2 * h0;
                 double hb = h;
+                double q = e / 3;
                 do
                 {
                     double h1 = (ha + hb - q) / 2;
@@ -95,7 +94,9 @@ namespace Lab5MMDO
                         x1[i] = x0[i] - h1 * g[i];
                         x2[i] = x0[i] - h2 * g[i];
                     }
-                    if (F(x1) <= F(x2))
+                    f1 = F(x1);
+                    f2 = F(x2);
+                    if (f1 <= f2)
                     {
                         hb = h2;
                     }
@@ -169,7 +170,7 @@ namespace Lab5MMDO
                         }
                         x0[i] = x[i] - w[i];
                     }
-                    double h = FH(n, h0, x0, g, e, F);
+                    double h = Find_h_new(n,F,x0,g,h0,e);
                     
                     for (int i = 0; i < n; i++)
                     {
@@ -255,11 +256,11 @@ namespace Lab5MMDO
                 h[i] = h0;
             }
             double[] x_int = new double[n];
-            double[] x_ent = new double[n];
+            double[] x_ext = new double[n];
             Array.Copy(x0, x_int, n);
             do
             {
-                Array.Copy(x_int, x_ent, n);
+                Array.Copy(x_int, x_ext, n);
                 for (int i = 0; i < n; i++)
                 {
                     double[] x = new double[n];
@@ -280,13 +281,77 @@ namespace Lab5MMDO
                         x_int[i] = x[i] + h[i] * z;
                         fx1 = F(x_int);
                         if (fx1 >= fx)
-                            h[i] = l * h[i];
+                            h[i] *= l;
                     }
                     while (fx1 >= fx && h[i] >= e / 2);
                 }
             }
-            while (Norm(x_int) - Norm(x_ent) >= e);
+            while (Norm(x_int) - Norm(x_ext) >= e);
             return x_int;
+        }
+
+        private static double Find_h_new(int n, Function F, double[] x0_, double[] g_, double h0, double e)
+        {
+            double[] x0 = new double[n];
+            Array.Copy(x0_, x0, n);
+            double[] g = new double[n];
+            Array.Copy(g_ ,g ,n);
+            double h = 0;
+            double f1 = F(x0);
+            double f2 = 0;
+            double[] x1 = new double[n];
+            double[] x2 = new double[n];
+            do
+            {
+                h0 = h0 / 2;
+                for (int i = 0; i < n; i++)
+                {
+                    x2[i] = x0[i] - h0 * g[i];
+                }
+                f2 = F(x2);
+            }
+            while (!(f1 > f2 || h0 < e));
+            if (h0 > e)
+            {
+                do
+                {
+                    Array.Copy(x2, x1, n);
+                    f1 = f2;
+                    h = h + h0;
+                    for (int i = 0; i < n; i++)
+                    {
+                        x2[i] = x1[i] - h * g[i];
+                    }
+                    f2 = F(x2);
+                }
+                while (!(f1 < f2));
+                double ha = h - 2 * h0;
+                double hb = h;
+                double q = e / 3;
+                do
+                {
+                    double h1 = (ha + hb - q) / 2;
+                    double h2 = (ha + hb + q) / 2;
+                    for (int i = 0; i < n; i++)
+			        {
+                        x1[i] = x0[i] - h1 * g[i];
+                        x2[i] = x0[i] - h2 * g[i];
+			        }
+                    f1 = F(x1);
+                    f2 = F(x2);
+                    if (f1 <= f2)
+                    {
+                        hb = h2;
+                    }
+                    else 
+                    {
+                        ha = h1;
+                    }
+                }
+                while(!(hb - ha < e));
+                h = (ha + hb) / 2;
+            }
+            return h;
         }
     }
 }
